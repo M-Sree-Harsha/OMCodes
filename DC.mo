@@ -23,7 +23,8 @@ model DC
   parameter Real DensityLiq[Nc]={857.347,852.5};
   parameter Real serfaceTn_top=0.025;
   parameter Real serfaceTn_bottom=0.028;
-  parameter Real DowncomerAreaFraction=0.1;
+  parameter Real DowncomerAreaFraction=0.12
+  ;
   parameter Real HoleSize=5;
   parameter Real WeirHight=45;
   parameter Real K2=30.5;
@@ -87,6 +88,7 @@ model DC
   Real WeirCrust;
   Real MinWeepingVelocity;
   Real ActMinVapVel;
+  Real ActMaxVapVel;
   Real PlateThickness;
   Real ResidualHead;
   Real DryPlateDrop;
@@ -132,14 +134,15 @@ model DC
     Top_mass_flow=Top_molar_flow*TopAvgMW;
     Bottom_Mass_flow=Bottom_Molar_flow*BottomAvgMW;
     
-    Vw_top=Top_mass_flow*(Refluxratio+1);
+    
     V_top=Top_molar_flow*(Refluxratio+1);
-    Lw_top=Vw_top-Top_mass_flow;
+    Vw_top=V_top*TopAvgMW;
     L_top=V_top-Top_molar_flow;
-    Lw_bottom=Lw_top+feed_mass_flow;
+    Lw_top=L_top*TopAvgMW;
     L_bottom=L_top+feed_molar_flow;
-    Vw_bottom=Lw_bottom-Bottom_Mass_flow;
+    Lw_bottom=L_bottom*BottomAvgMW;
     V_bottom=L_bottom-Bottom_Molar_flow;
+    Vw_bottom=V_bottom*BottomAvgMW;
     
     Dens_vap_Top=(Top_P*TopAvgMW)/(GasConstant*Top_T);
     Dens_Vap_Bottom=(Bottom_P*BottomAvgMW)/(GasConstant*Bottom_T);
@@ -178,19 +181,21 @@ model DC
     end if;
     
     WeirLength=0.7*Dia_top;
-    DowncomerArea=0.1*CrossSecArea_top;
+    DowncomerArea=0.12*CrossSecArea_top;
     ActiveArea=CrossSecArea_top-(2*DowncomerArea);
     HolePitch=HoleSize*3.5;
-    HoleArea=(0.907*((HoleSize/HolePitch)^2))*ActiveArea;
+    //HoleArea=(0.907*((HoleSize/HolePitch)^2))*ActiveArea;
+    HoleArea=0.1*ActiveArea;
     MinimumTurnDown=0.7*Top_mass_flow;
-    WeirCrust=750*((MinimumTurnDown/(Dens_liq_Top*WeirLength))^(2/3));
-    MinWeepingVelocity=(K2-(0.9*(25.4-HoleSize)))/((Dens_vap_Top)^0.5);
+    WeirCrust=1000*((MinimumTurnDown/(Dens_liq_Bottom*WeirLength))^(2/3));
+    MinWeepingVelocity=(K2-(0.9*(25.4-HoleSize)))/((Dens_Vap_Bottom)^0.5);
     ActMinVapVel=(0.7*(Vw_bottom/Dens_Vap_Bottom))/HoleArea;
+    ActMaxVapVel=(Vw_bottom/Dens_Vap_Bottom)/HoleArea;
     PlateThickness=HoleSize;
-    ResidualHead=(12.5*1000)/Dens_liq_Top;
+    ResidualHead=(12.5*1000)/Dens_liq_Bottom;
     OrrificeCoeff=Modelica.Math.Vectors.interpolate(CoX,CoY,(HoleArea*100/ActiveArea));
-    DryPlateDrop=51*((MinWeepingVelocity/OrrificeCoeff)^2)*(Dens_vap_Top/Dens_liq_Top);
+    DryPlateDrop=51*((MinWeepingVelocity/OrrificeCoeff)^2)*(Dens_Vap_Bottom/Dens_liq_Bottom);
     TotalPressureHeadDrop=DryPlateDrop+ResidualHead+WeirHight+WeirCrust;
-    TotalpressureDrop=9.81*TotalPressureHeadDrop*Dens_liq_Top/1000;
+    TotalpressureDrop=9.81*TotalPressureHeadDrop*Dens_liq_Bottom/1000;
     
 end DC;
