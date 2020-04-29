@@ -92,7 +92,7 @@ model DC
   Real TotalPressureHeadDrop;
   Real TotalpressureDrop;
   Real OrrificeCoeff;
-  
+  Real NumberOfHoles;
   equation
     vis[1]=0.32497/1000;
     vis[2]=0.3132/1000;
@@ -182,7 +182,7 @@ model DC
     ActiveArea=CrossSecArea_top-(2*DowncomerArea);
     HolePitch=HoleSize*3.5;
     //HoleArea=(0.907*((HoleSize/HolePitch)^2))*ActiveArea;
-    HoleArea=0.1*ActiveArea;
+    HoleArea=0.07*ActiveArea;
     MinimumTurnDown=0.7*Top_mass_flow;
     WeirCrust=1000*((MinimumTurnDown/(Dens_liq_Bottom*WeirLength))^(2/3));
     MinWeepingVelocity=(K2-(0.9*(25.4-HoleSize)))/((Dens_Vap_Bottom)^0.5);
@@ -194,5 +194,6 @@ model DC
     DryPlateDrop=51*((MinWeepingVelocity/OrrificeCoeff)^2)*(Dens_Vap_Bottom/Dens_liq_Bottom);
     TotalPressureHeadDrop=DryPlateDrop+ResidualHead+WeirHight+WeirCrust;
     TotalpressureDrop=9.81*TotalPressureHeadDrop*Dens_liq_Bottom/1000;
+    NumberOfHoles=HoleArea/(3.14*(HoleSize*HoleSize)/(4*1000*1000));
     
 end DC;
