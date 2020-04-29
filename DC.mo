@@ -23,8 +23,7 @@ model DC
   parameter Real DensityLiq[Nc]={857.347,852.5};
   parameter Real serfaceTn_top=0.025;
   parameter Real serfaceTn_bottom=0.028;
-  parameter Real DowncomerAreaFraction=0.12
-  ;
+  parameter Real DowncomerAreaFraction=0.12;
   parameter Real HoleSize=5;
   parameter Real WeirHight=45;
   parameter Real K2=30.5;
@@ -65,8 +64,6 @@ model DC
   Real Dens_Vap_Bottom;
   Real Dens_liq_Top;
   Real Dens_liq_Bottom;
-  Real Alpha;
-  Real Beta;
   Real Cf_top;
   Real Cf_bottom;
   Real FlodingVel_top;
@@ -149,10 +146,10 @@ model DC
     Dens_liq_Top=sum(Top_x.*DensityLiq);
     Dens_liq_Bottom=sum(Bottom_x.*DensityLiq);
     
-    Alpha=(0.0744*Tray_spacing)+0.01173;
-    Beta=(0.0304*Tray_spacing)+0.015;
-    Cf_top=((Alpha*log10(1/((Lw_top/Vw_top)*((Dens_vap_Top/Dens_liq_Top)^0.5))))+Beta)*((serfaceTn_top/0.02)^0.2);
-    Cf_bottom=((Alpha*log10(1/((Lw_bottom/Vw_bottom)*((Dens_Vap_Bottom/Dens_liq_Bottom)^0.5))))+Beta)*((serfaceTn_bottom/0.02)^0.2);
+   
+    Cf_top=(0.0105+(8.127*0.0001*((Tray_spacing*1000)^0.755)*(2.71828^((-1.463)*(((Lw_top/Vw_top)*((Dens_vap_Top/Dens_liq_Top)^0.5))^0.842)))))*((serfaceTn_top/0.02)^0.2);
+    
+    Cf_bottom=(0.0105+(8.127*0.0001*((Tray_spacing*1000)^0.755)*(2.71828^((-1.463)*(((Lw_bottom/Vw_bottom)*((Dens_Vap_Bottom/Dens_liq_Bottom)^0.5))^0.842)))))*((serfaceTn_bottom/0.02)^0.2);
     
     FlodingVel_top=Cf_top*(((Dens_liq_Top-Dens_vap_Top)/Dens_vap_Top)^0.5);
     FlodingVel_bottom=Cf_bottom*(((Dens_liq_Bottom-Dens_Vap_Bottom)/Dens_Vap_Bottom)^0.5);
