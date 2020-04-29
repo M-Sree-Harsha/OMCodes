@@ -94,6 +94,10 @@ model DC
   Real TotalpressureDrop;
   Real OrrificeCoeff;
   Real NumberOfHoles;
+  Real Theta;//angle subtended by the edge of the plate
+  Real EdgeStripArea;
+  Real ClimingZoneArea;
+  Real PerforatedArea;
   equation
     vis[1]=0.32497/1000;
     vis[2]=0.3132/1000;
@@ -191,10 +195,14 @@ model DC
     ActMaxVapVel=(Vw_bottom/Dens_Vap_Bottom)/HoleArea;
     PlateThickness=HoleSize;
     ResidualHead=(12.5*1000)/Dens_liq_Bottom;
-    OrrificeCoeff=Modelica.Math.Vectors.interpolate(CoX,CoY,(HoleArea*100/ActiveArea));
+    OrrificeCoeff=Modelica.Math.Vectors.interpolate(CoX,CoY,(HoleArea*100/PerforatedArea));
     DryPlateDrop=51*((MinWeepingVelocity/OrrificeCoeff)^2)*(Dens_Vap_Bottom/Dens_liq_Bottom);
     TotalPressureHeadDrop=DryPlateDrop+ResidualHead+WeirHight+WeirCrust;
     TotalpressureDrop=9.81*TotalPressureHeadDrop*Dens_liq_Bottom/1000;
     NumberOfHoles=HoleArea/(3.14*(HoleSize*HoleSize)/(4*1000*1000));
+    Theta=180-((acos(((2*((Dia_top/2)^2))-(WeirLength^2))/(2*((Dia_top/2)^2))))*180/3.14);
+    EdgeStripArea=((Dia_top-0.05)*3.14*Theta/180)*0.05;
+    ClimingZoneArea=2*(WeirLength+0.05)*0.05;
+    PerforatedArea=ActiveArea-ClimingZoneArea-EdgeStripArea;
     
 end DC;
