@@ -29,6 +29,7 @@ model DC
   parameter Real K2=30.5;
   parameter Real CoX[6]={5,7,10,11,15,17};
   parameter Real CoY[6]={0.8,0.825,0.84,0.85,0.88,0.9};
+  parameter Real q=1;
   
   Real Tray_spacing(start=0.5);
   Real vis[Nc];
@@ -136,7 +137,7 @@ model DC
     Vw_top=V_top*TopAvgMW;
     L_top=V_top-Top_molar_flow;
     Lw_top=L_top*TopAvgMW;
-    L_bottom=L_top+feed_molar_flow;
+    L_bottom=L_top+(feed_molar_flow*q);
     Lw_bottom=L_bottom*BottomAvgMW;
     V_bottom=L_bottom-Bottom_Molar_flow;
     Vw_bottom=V_bottom*BottomAvgMW;
