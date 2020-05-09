@@ -146,7 +146,7 @@ model DC
     Bottom_Mass_flow=Bottom_Molar_flow*BottomAvgMWLiq;
     
     
-    V_top=Top_molar_flow*(Refluxratio+1);
+    V_top=Top_molar_flow*(Refluxratio+1  );
     Vw_top=V_top*TopAvgMWVap;
     L_top=V_top-Top_molar_flow;
     Lw_top=L_top*TopAvgMWLiq;
