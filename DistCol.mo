@@ -359,7 +359,7 @@ within Simulator.UnitOperations.DistillationColumn;
       end for;
       
       //Caclulation of Avg Viscosity
-      avg_Molar_viscosity=sum((vis.*Feed_x).*Mol_wt);
+      avg_Molar_viscosity=sum(vis.*Feed_x)*100;
       //calculation of column Efficience using O CONNELL’S CORRELATION
       Eff=51-(32.5*log10(avg_Molar_viscosity*Alpha_avg));
       //calculation of actual stages
